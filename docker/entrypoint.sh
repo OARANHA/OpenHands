@@ -301,18 +301,15 @@ trap cleanup EXIT SIGINT SIGTERM
 # ── 1. Start Agent Server ────────────────────────────────────────────────────
 log "Starting agent-server on port $AGENT_SERVER_PORT..."
 
-if command -v openhands-agent-server >/dev/null 2>&1; then
-  # Binary build (production image)
-  openhands-agent-server --port "$AGENT_SERVER_PORT" \
-    --import-modules "$AGENT_SERVER_IMPORT_MODULES" &
-elif [ -x /agent-server/.venv/bin/python ]; then
-  # Source build (development image)
-  /agent-server/.venv/bin/python -m openhands.agent_server --port "$AGENT_SERVER_PORT" \
-    --import-modules "$AGENT_SERVER_IMPORT_MODULES" &
-else
-  log_error "Cannot find agent-server binary or source venv."
+# Wandora distributions build the owned SDK's 'source' target.
+# Fail closed if our server is missing; never silently execute a global or
+# upstream Agent Server installed indirectly by another Python package.
+if [ ! -x /agent-server/.venv/bin/python ]; then
+  log_error "Wandora Agent Server not found in /agent-server/.venv; refusing fallback."
   exit 1
 fi
+/agent-server/.venv/bin/python -m openhands.agent_server --port "$AGENT_SERVER_PORT" \
+  --import-modules "$AGENT_SERVER_IMPORT_MODULES" &
 PIDS+=($!)
 
 # ── 2. Start Automation Server ───────────────────────────────────────────────
