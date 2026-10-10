@@ -7,7 +7,7 @@
 ## Autoridades e origem
 
 1. [OpenHands original](https://github.com/OpenHands/OpenHands) — upstream do Agent Canvas e orquestração local.
-2. [Fork Wandora](https://github.com/OARANHA/OpenHands) — frontend/distribuição; `main` deve continuar próxima ao upstream.
+2. [Fork Wandora](https://github.com/OARANHA/OpenHands) — frontend/distribuição independente. A `main` é nossa; o upstream serve apenas como origem histórica e referência técnica. Nunca sincronizar automaticamente.
 3. [OpenHands software-agent-sdk](https://github.com/OpenHands/software-agent-sdk) — Python SDK, Agent Server, execução de ferramentas, API e cliente TypeScript.
 4. `AGENTS.md`, `docs/DEVELOPMENT.md`, `config/defaults.json` e skills relevantes dentro do checkout.
 5. Para todo trabalho: **REAL NOW → PROVEN EVIDENCE → GAPS → REUSE GATE → DECISION**.
@@ -67,4 +67,13 @@ Operar OpenHands auto-hospedado com Chutes.ai, seleção real dos modelos do pro
 
 ## Regra de trabalho
 
-Usar branches curtas e PRs; verificações declaradas apenas quando executadas. Tratar `config/defaults.json` como autoridade para versões e preservar as regras de `AGENTS.md`, inclusive a seção `HUMAN:` reservada ao autor humano em descrições de PR.
+Usar branches curtas e PRs **somente entre branches de `OARANHA/*`**, nunca para `OpenHands/*`. Não sincronizar automaticamente o upstream, não executar `Sync fork` e não usar versões mutáveis em builds. Verificações declaradas apenas quando executadas. Tratar `config/defaults.json` como autoridade para versões e preservar as regras de `AGENTS.md`, inclusive a seção `HUMAN:` reservada ao autor humano em descrições de PR.
+
+## Decisão do proprietário — distribuição independente (2026-10-10)
+
+O objetivo é construir e publicar a **imagem própria** `ghcr.io/oaranha/openhands-wandora`, integrando o Agent Server de `OARANHA/software-agent-sdk`. Não há obrigação de acompanhar as novas versões do OpenHands original. Atualizações externas são avaliadas, cherry-picked/adaptadas e testadas **somente por decisão explícita**; nunca se usa sincronização automática.
+
+- Fonte de build: commits exatos dos nossos dois forks, fixados em `config/wandora-image.json` e identificados nas tags/digests.
+- `scripts/wandora-build.mjs`: monta localmente a imagem do Agent Server (`source`) e depois o Canvas, sem `git pull`, `docker push`, deploy ou alteração de segredos.
+- Os workflows herdados `.github/workflows/server.yml` (SDK) e `.github/workflows/docker.yml` (Canvas) são **manuais** nas branches de adaptação e apontam apenas ao namespace `ghcr.io/oaranha/`. Ainda não foram integrados na `main`.
+- Validação pendente: scripts/CI, dois componentes na imagem, funcionalidade Chutes/DSML, auditoria de workflows herdados e preservação da configuração da VPS.
