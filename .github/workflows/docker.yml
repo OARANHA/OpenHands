@@ -106,12 +106,21 @@ jobs:
           SHORT_SHA=$(echo "$RELEVANT_SHA" | cut -c1-7)
           echo "short_sha=$SHORT_SHA" >> "$GITHUB_OUTPUT"
 
-          # Resolve agent-server base image (input override > config/defaults.json)
-          if [ -n "$AGENT_SERVER_IMAGE_INPUT" ]; then
-            echo "agent_server_image=$AGENT_SERVER_IMAGE_INPUT" >> "$GITHUB_OUTPUT"
-          else
-            echo "agent_server_image=$DEFAULT_AGENT_SERVER_IMAGE" >> "$GITHUB_OUTPUT"
+          # Wandora images must always use an explicit owned SDK build.
+          # Do not silently fall back to OpenHands upstream agent-server.
+          if [ -z "$AGENT_SERVER_IMAGE_INPUT" ]; then
+            echo "::error::Specify a reviewed ghcr.io/oaranha/wandora-agent-server image tag or digest."
+            exit 1
           fi
+          case "$AGENT_SERVER_IMAGE_INPUT" in
+            ghcr.io/oaranha/wandora-agent-server:sha-*|ghcr.io/oaranha/wandora-agent-server@sha256:*)
+              echo "agent_server_image=$AGENT_SERVER_IMAGE_INPUT" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "::error::Refusing non-Wandora Agent Server image or mutable tag."
+              exit 1
+              ;;
+          esac
 
           # Resolve automation version (input override > config/defaults.json)
           if [ -n "$AUTOMATION_VERSION_INPUT" ]; then
