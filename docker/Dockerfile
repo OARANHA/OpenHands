@@ -82,9 +82,9 @@ ARG VITE_BASE_PATH="/canvas"
 ARG VITE_POSTHOG_API_KEY=""
 
 ARG AGENT_CANVAS_VERSION=dev
-LABEL org.opencontainers.image.title="agent-canvas"
-LABEL org.opencontainers.image.description="All-in-one agent-canvas: Agent Server + Automation + Frontend"
-LABEL org.opencontainers.image.source="https://github.com/OpenHands/OpenHands"
+LABEL org.opencontainers.image.title="openhands-wandora"
+LABEL org.opencontainers.image.description="Wandora OpenHands: owned Agent Server SDK + Agent Canvas + Automation"
+LABEL org.opencontainers.image.source="https://github.com/OARANHA/OpenHands"
 LABEL org.opencontainers.image.version="${AGENT_CANVAS_VERSION}"
 LABEL org.opencontainers.image.revision="${OPENHANDS_BUILD_GIT_SHA}"
 
