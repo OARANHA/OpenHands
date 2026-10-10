@@ -1,0 +1,9 @@
+{
+  "note": "Wandora release input: only owned repositories and fixed Git SHAs; review and update intentionally after SDK changes.",
+  "sdkRepository": "OARANHA/software-agent-sdk",
+  "sdkCommit": "405bf4a205deca559bc7edaf004ddf3633375490",
+  "sdkDockerTarget": "source",
+  "sdkImage": "ghcr.io/oaranha/wandora-agent-server",
+  "canvasImage": "ghcr.io/oaranha/openhands-wandora",
+  "distributionPolicy": "manual-reviewed-build-no-upstream-sync"
+}
