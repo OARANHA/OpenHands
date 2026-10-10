@@ -51,3 +51,14 @@ Antes de qualquer publicação:
 - As correções de descoberta de modelos Chutes e DSML ainda serão implementadas no SDK; o build inicial apenas garante proveniência dos dois forks.
 - O Dockerfile herdado ainda instala `openhands-automation` da versão fixa em `config/defaults.json` e obtém suas dependências Python: confirmar compatibilidade e origem efetiva dos pacotes desse processo; o Agent Server principal usa o checkout Wandora dentro de `/agent-server/.venv`.
 - O upstream usa imagens-base de sistema com algumas referências sem digest imutável. O código Git está fixado, mas builds independentes podem resolver imagens ou pacotes de sistema diferentes. Fazer hardening com digest e cache interno antes de declarar builds bit a bit reproduzíveis.
+
+## Build e publicação pelo GitHub Actions (sem token novo)
+
+O workflow `.github/workflows/wandora-image.yml` é **apenas manual** e usa a autenticação efêmera `GITHUB_TOKEN` do próprio Actions com acesso a `packages: write` no repositório. Após esse workflow ser revisado e integrado à `main`, abra **Actions → Wandora — Build owned OpenHands image → Run workflow**.
+
+- `publish=false` (padrão): executa testes, compila e verifica a imagem no runner; **não publica**.
+- `publish=true`: além de testes e verificação, publica **somente** `ghcr.io/oaranha/openhands-wandora:canvas-<sha>-sdk-<sha>` no GHCR da conta `OARANHA`.
+
+O workflow baixa o Canvas do nosso próprio repositório e o SDK do nosso próprio fork fixado por commit. Não envia código ao GitHub upstream nem atualiza a instalação existente. Mesmo após publicar GHCR, **não há deploy na VPS**.
+
+A execução não foi acionada nesta etapa. A compilação pode consumir minutos de runner e armazenamento de imagem; verificar limites de conta e capacidade antes de iniciar. O job atual cobre Linux/amd64; a arquitetura da VPS Vigia ainda precisa ser confirmada antes de qualquer deploy.
