@@ -82,6 +82,8 @@ ARG VITE_BASE_PATH="/canvas"
 ARG VITE_POSTHOG_API_KEY=""
 
 ARG AGENT_CANVAS_VERSION=dev
+ARG WANDORA_SDK_GIT_SHA=unknown
+LABEL io.wandora.sdk.revision="${WANDORA_SDK_GIT_SHA}"
 LABEL org.opencontainers.image.title="openhands-wandora"
 LABEL org.opencontainers.image.description="Wandora OpenHands: owned Agent Server SDK + Agent Canvas + Automation"
 LABEL org.opencontainers.image.source="https://github.com/OARANHA/OpenHands"
