@@ -92,6 +92,7 @@ try {
     "--build-arg", "AUTOMATION_VERSION=" + defaults.versions.automation,
     "--build-arg", "AGENT_CANVAS_VERSION=" + defaults.versions.agentCanvas,
     "--build-arg", "OPENHANDS_BUILD_GIT_SHA=" + canvasSha,
+    "--build-arg", "WANDORA_SDK_GIT_SHA=" + sdkSha,
     "--build-arg", "OPENHANDS_BUILD_GIT_REF=wandora-pinned",
     "--build-arg", "VITE_BASE_PATH=" + defaults.paths.canvasBasePath,
     "--build-arg", "AGENT_SERVER_SDK_GIT_REF=",
