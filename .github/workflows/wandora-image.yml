@@ -94,6 +94,8 @@ jobs:
           CANVAS_SHORT="$(git -C canvas rev-parse --short=12 HEAD)"
           FINAL_IMAGE="ghcr.io/oaranha/openhands-wandora:canvas-${CANVAS_SHORT}-sdk-${SDK_SHORT}"
           docker image inspect "$FINAL_IMAGE" >/dev/null
+          ACTUAL_SDK_SHA=$(docker image inspect --format '{{index .Config.Labels "io.wandora.sdk.revision"}}' "$FINAL_IMAGE")
+          test "$ACTUAL_SDK_SHA" = "$(git -C sdk rev-parse HEAD)"
           docker run --rm --entrypoint /bin/sh "$FINAL_IMAGE" -c \
             'test -x /agent-server/.venv/bin/python && /agent-server/.venv/bin/python -c "import openhands.agent_server.llm_router"'
           echo "FINAL_IMAGE=$FINAL_IMAGE" >> "$GITHUB_ENV"
